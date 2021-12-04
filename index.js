@@ -1,18 +1,51 @@
 const http = require('http')
+const path = require('path')
+const fs = require('fs')
 
 const server = http.createServer((req, res) => {
     if (req.method === 'GET') {
         res.writeHead(200, {
-            'Content-Type': 'text/html'
+            'Content-Type': 'text/html; charset=utf-8'
         })
-        res.end(`
-            <h1>Form</h1>
-            <form method="post" action="/">
-                <input name="title" type="text" />
-                <button type="submit">Submit</button>
-            </form>
-        `)
+
+        if (req.url === '/') {
+            fs.readFile(path.join(__dirname, 'views', 'index.html'),
+                'utf-8',
+                (err, content) => {
+                    if (err) throw err
+
+                    res.end(content)
+                })
+        } else if (req.url === '/about') {
+            fs.readFile(path.join(__dirname, 'views', 'about.html'),
+                'utf-8',
+                (err, content) => {
+                    if (err) throw err
+
+                    res.end(content)
+                })
+        } else if (req.url === '/api/users') {
+            res.writeHead(200, {
+                'Content-Type': 'text/json'
+            })
+
+            const users = [
+                {
+                    uid: 000,
+                    login: 'admin'
+
+                },
+                {
+                    uid: 001,
+                    login: 'user'
+
+                }
+            ]
+
+            res.end(JSON.stringify(users))
+        }
     }
+
     if (req.method === 'POST') {
         const body = []
 
