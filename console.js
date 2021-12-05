@@ -10,5 +10,4 @@ function consoleToJSON() {
     return con
 }
 
-
 console.log(consoleToJSON())
