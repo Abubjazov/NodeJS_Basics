@@ -16,9 +16,9 @@ app.set('views', 'views')
 
 app.use(express.static('public'))
 
-app.use(mainRoutes)
-app.use(coursesRoutes)
-app.use(addCourseRoutes)
+app.use('/', mainRoutes)
+app.use('/courses', coursesRoutes)
+app.use('/add-course', addCourseRoutes)
 
 const PORT = process.env.PORT || 3000
 
