@@ -16,6 +16,7 @@ router.get('/:id', async (req, res) => {
     const course = await Course.getById(req.params.id)
 
     res.render('course', {
+        layout: 'course',
         title: `${course.title}`,
         course
     })
