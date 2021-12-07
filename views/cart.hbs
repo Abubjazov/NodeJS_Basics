@@ -1,7 +1,7 @@
-<h1>Courses</h1>
+<h1>Shopping cart</h1>
 <hr>
 
-{{#if courses.length}}
+{{!-- {{#if courses.length}}
 {{#each courses}}
 
   <div class="row">
@@ -14,13 +14,9 @@
           <span class="card-title">{{title}}</span>
           <p class="price">{{price}}</p>
         </div>
-        <div class="card-action actions">
+        <div class="card-action">
           <a href="/courses/{{id}}" target="_blank">Open a course</a>
-          <a href="/courses/{{id}}/edit?allow=true">Edit</a>
-          <form action="/card/add" method="POST">
-          <input type="hidden" name="id" value="{{id}}">
-            <button type="submit" class="btn btn-primary">Add to cart</button>
-          </form>
+          <a href="/cart/{{id}}/remove">Remove course</a>
         </div>
       </div>
     </div>
@@ -29,6 +25,6 @@
 {{/each}}
 {{else}}
 
-<p>Course list is empty</p>
+<p>Shopping cart is empty</p>
 
-{{/if}}
+{{/if}} --}}

@@ -4,6 +4,7 @@ const app = express()
 const mainRoutes = require('./routes/main')
 const coursesRoutes = require('./routes/courses')
 const addCourseRoutes = require('./routes/add-course')
+const cartRoutes = require('./routes/cart')
 
 const hbs = exhbs.create({
     defaultLayout: 'main',
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/', mainRoutes)
 app.use('/courses', coursesRoutes)
 app.use('/add-course', addCourseRoutes)
+app.use('/cart', cartRoutes)
 
 const PORT = process.env.PORT || 3000
 
