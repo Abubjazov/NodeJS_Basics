@@ -4,3 +4,17 @@ document.querySelectorAll('.price').forEach(node => {
         style: 'currency'
     }).format(node.textContent)
 })
+
+const $cart = document.querySelector('#cart')
+
+if ($cart) {
+    $cart.addEventListener('click', e => {
+        if (e.target.classList.contains('js-remove')) {
+            const id = e.target.dataset.id
+
+            fetch('/cart/remove/' + id, {
+                method: 'delete'
+            })
+        }
+    })
+}
