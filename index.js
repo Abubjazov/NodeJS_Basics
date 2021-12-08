@@ -1,6 +1,8 @@
+require('dotenv').config()
 const path = require('path')
 const express = require('express')
 const exhbs = require('express-handlebars')
+const mongo = require('mongoose')
 
 const app = express()
 const mainRoutes = require('./routes/main')
@@ -26,7 +28,17 @@ app.use('/add-course', addCourseRoutes)
 app.use('/cart', cartRoutes)
 
 const PORT = process.env.PORT || 3000
+const URL = process.env.DB_URL
 
-app.listen(PORT, () => {
-    console.log(`Server is running on PORT: ${PORT}`)
-})
+async function start() {
+    try {
+        await mongo.connect(URL, { useNewUrlParser: true })
+        app.listen(PORT, () => {
+            console.log(`Server is running on PORT: ${PORT}`)
+        })
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+start()
