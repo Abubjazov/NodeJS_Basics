@@ -4,6 +4,7 @@ const router = Router()
 
 router.get('/', async (req, res) => {
     const courses = await Course.find().lean()
+    console.log(courses)
 
     res.render('courses', {
         title: 'Courses',
@@ -23,10 +24,7 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/edit', async (req, res) => {
-    const { id } = req.body
-    delete req.body.id
-
-    await Course.findByIdAndUpdate(id, req.body).lean()
+    await Course.findByIdAndUpdate(req.body.id, req.body).lean()
     res.redirect('/courses')
 })
 
