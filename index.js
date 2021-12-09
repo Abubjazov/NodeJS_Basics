@@ -5,10 +5,14 @@ const exhbs = require('express-handlebars')
 const mongo = require('mongoose')
 
 const app = express()
+
+const User = require('./models/user')
+
 const mainRoutes = require('./routes/main')
 const coursesRoutes = require('./routes/courses')
 const addCourseRoutes = require('./routes/add-course')
 const cartRoutes = require('./routes/cart')
+const user = require('./models/user')
 
 const hbs = exhbs.create({
     defaultLayout: 'main',
@@ -27,12 +31,36 @@ app.use('/courses', coursesRoutes)
 app.use('/add-course', addCourseRoutes)
 app.use('/cart', cartRoutes)
 
+app.use(async (req, res, next) => {
+    try {
+        const user = await User.findById('61b2567c1d0a6e80702477dc')
+        req.user = user
+        next()
+    } catch (err) {
+        console.log(err)
+    }
+
+})
+
 const PORT = process.env.PORT || 3000
 const URL = process.env.DB_URL
 
 async function start() {
     try {
         await mongo.connect(URL, { useNewUrlParser: true })
+
+        const candidate = await User.findOne()
+
+        if (!candidate) {
+            const user = new User({
+                email: 'test@mail.ru',
+                name: 'User1',
+                cart: { items: [] }
+            })
+
+            await user.save()
+        }
+
         app.listen(PORT, () => {
             console.log(`Server is running on PORT: ${PORT}`)
         })
