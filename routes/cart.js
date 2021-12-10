@@ -9,6 +9,12 @@ function mapCartItems(cart) {
     }))
 }
 
+function computePrice(courses) {
+    return courses.reduce((total, item) => {
+        return total += item.price * item.count
+    }, 0)
+}
+
 router.post('/add', async (req, res) => {
     const course = await Course.findById(req.body.id)
 
@@ -25,8 +31,8 @@ router.get('/', async (req, res) => {
     res.render('cart', {
         title: 'Shopping cart',
         isCart: true,
-        courses
-        // price: cart.price
+        courses,
+        price: computePrice(courses)
     })
 })
 
