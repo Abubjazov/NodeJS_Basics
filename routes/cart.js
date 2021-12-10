@@ -23,8 +23,7 @@ router.post('/add', async (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-    const user = await req.user
-        .populate('cart.items.courseId')
+    const user = await req.user.populate('cart.items.courseId')
 
     const courses = mapCartItems(user.cart)
 
@@ -36,10 +35,17 @@ router.get('/', async (req, res) => {
     })
 })
 
-// router.delete('/remove/:id', async (req, res) => {
-//     const cart = await Cart.remove(req.params.id)
+router.delete('/remove/:id', async (req, res) => {
+    await req.user.removeFromCart(req.params.id)
 
-//     res.status(200).json(cart)
-// })
+    const user = await req.user.populate('cart.items.courseId')
+    const courses = mapCartItems(user.cart)
+    const cart = {
+        courses,
+        price: computePrice(courses)
+    }
+
+    res.status(200).json(cart)
+})
 
 module.exports = router
