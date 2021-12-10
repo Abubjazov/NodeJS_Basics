@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
 router.delete('/remove/:id', async (req, res) => {
     await req.user.removeFromCart(req.params.id)
 
-    const user = await req.user.populate('cart.items.courseId')
+    const user = await req.user.populate('cart.items.courseId').lean()
     const courses = mapCartItems(user.cart)
     const cart = {
         courses,
