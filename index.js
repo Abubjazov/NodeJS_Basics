@@ -12,7 +12,6 @@ const mainRoutes = require('./routes/main')
 const coursesRoutes = require('./routes/courses')
 const addCourseRoutes = require('./routes/add-course')
 const cartRoutes = require('./routes/cart')
-const user = require('./models/user')
 
 const hbs = exhbs.create({
     defaultLayout: 'main',
@@ -23,6 +22,15 @@ app.engine('hbs', hbs.engine)
 app.set('view engine', 'hbs')
 app.set('views', 'views')
 
+app.use(async (req, res, next) => {
+    try {
+        req.user = await User.findById(process.env.USER_ID)
+        next()
+    } catch (err) {
+        console.log(err)
+    }
+})
+
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
 
@@ -30,17 +38,6 @@ app.use('/', mainRoutes)
 app.use('/courses', coursesRoutes)
 app.use('/add-course', addCourseRoutes)
 app.use('/cart', cartRoutes)
-
-app.use(async (req, res, next) => {
-    try {
-        const user = await User.findById('61b2567c1d0a6e80702477dc')
-        req.user = user
-        next()
-    } catch (err) {
-        console.log(err)
-    }
-
-})
 
 const PORT = process.env.PORT || 3000
 const URL = process.env.DB_URL
