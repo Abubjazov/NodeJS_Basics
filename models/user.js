@@ -27,4 +27,18 @@ const userSchema = new Schema({
     }
 })
 
+userSchema.methods.addToCart = function (course) {
+    const index = this.cart.items.findIndex(item => item.courseId.toString() === course._id.toString())
+
+    if (index >= 0) {
+        this.cart.items[index].count += 1
+    } else {
+        this.cart.items.push({
+            count: 1,
+            courseId: course._id
+        })
+    }
+    return this.save()
+}
+
 module.exports = model('User', userSchema)
