@@ -10,25 +10,28 @@ router.get('/login', async (req, res) => {
 })
 
 router.get('/logout', async (req, res) => {
-    // req.session.isAuthenticated = false
     req.session.destroy(() => {
         res.redirect('/auth/login#login')
     })
 })
 
 router.post('/login', async (req, res) => {
-    const user = await User.findById(process.env.USER_ID)
+    try {
+        const user = await User.findById(process.env.USER_ID)
 
-    req.session.user = user
-    req.session.isAuthenticated = true
+        req.session.user = user
+        req.session.isAuthenticated = true
 
-    req.session.save(err => {
-        if (err) {
-            throw err
-        } else {
-            res.redirect('/')
-        }
-    })
+        req.session.save(err => {
+            if (err) {
+                throw err
+            } else {
+                res.redirect('/')
+            }
+        })
+    } catch (err) {
+        throw err
+    }
 })
 
 module.exports = router

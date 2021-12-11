@@ -12,6 +12,7 @@ const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-ac
 const app = express()
 
 const varMiddleware = require('./middleware/variables')
+const userMiddleware = require('./middleware/user')
 
 const mainRoutes = require('./routes/main')
 const coursesRoutes = require('./routes/courses')
@@ -43,6 +44,7 @@ app.use(session({
     store
 }))
 app.use(varMiddleware)
+app.use(userMiddleware)
 
 app.use('/', mainRoutes)
 app.use('/courses', coursesRoutes)
