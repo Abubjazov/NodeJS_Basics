@@ -35,15 +35,21 @@
 
         <form action="/registration" method="POST">
             <div class="input-field">
-                <input id="email" name="email" type="email" class="validate" required>
-                <label for="email">Email</label>
+                <input id="reg-email" name="email" type="email" class="validate" required>
+                <label for="reg-email">Email</label>
                 <span class="helper-text" data-error="Please input your email"></span>
             </div>
 
             <div class="input-field">
-                <input id="password" name="password" type="password" class="validate" required>
-                <label for="password">Password</label>
+                <input id="reg-password" name="password" type="password" class="validate" required>
+                <label for="reg-password">Password</label>
                 <span class="helper-text" data-error="Please input password"></span>
+            </div>
+
+            <div class="input-field">
+                <input id="confirm-password" name="confirm-password" type="password" class="validate" required>
+                <label for="confirm-password">Confirm password</label>
+                <span class="helper-text" data-error="Please confirm password"></span>
             </div>
 
             <button type="submit" class="btn btn-primary">Register now</button>
