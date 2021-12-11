@@ -1,15 +1,16 @@
 const { Router } = require('express')
 const Course = require('../models/course')
 const router = Router()
+const routeProtector = require('../middleware/routes-protector')
 
-router.get('/', (req, res) => {
+router.get('/', routeProtector, (req, res) => {
     res.render('add-course', {
         title: 'Add course',
         isAddCourse: true
     })
 })
 
-router.post('/', async (req, res) => {
+router.post('/', routeProtector, async (req, res) => {
     const course = new Course({
         title: req.body.title,
         price: req.body.price,

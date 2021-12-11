@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const Course = require('../models/course')
 const router = Router()
+const routeProtector = require('../middleware/routes-protector')
 
 router.get('/', async (req, res) => {
     const courses = await Course.find().populate('userId', 'email name').lean()
@@ -22,12 +23,12 @@ router.get('/:id', async (req, res) => {
     })
 })
 
-router.post('/edit', async (req, res) => {
+router.post('/edit', routeProtector, async (req, res) => {
     await Course.findByIdAndUpdate(req.body.id, req.body).lean()
     res.redirect('/courses')
 })
 
-router.post('/remove', async (req, res) => {
+router.post('/remove', routeProtector, async (req, res) => {
     try {
         await Course.findByIdAndRemove(req.body.id).lean()
     } catch (err) {
@@ -37,7 +38,7 @@ router.post('/remove', async (req, res) => {
     res.redirect('/courses')
 })
 
-router.get('/:id/edit', async (req, res) => {
+router.get('/:id/edit', routeProtector, async (req, res) => {
     if (!req.query.allow) {
         return res.redirect('/')
     }
