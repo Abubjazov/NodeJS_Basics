@@ -16,7 +16,7 @@ const coursesRoutes = require('./routes/courses')
 const addCourseRoutes = require('./routes/add-course')
 const cartRoutes = require('./routes/cart')
 const ordersRoutes = require('./routes/orders')
-const loginRoutes = require('./routes/login')
+const authRoutes = require('./routes/auth')
 
 const hbs = exhbs.create({
     defaultLayout: 'main',
@@ -45,7 +45,7 @@ app.use('/courses', coursesRoutes)
 app.use('/add-course', addCourseRoutes)
 app.use('/cart', cartRoutes)
 app.use('/orders', ordersRoutes)
-app.use('/login', loginRoutes)
+app.use('/auth', authRoutes)
 
 const PORT = process.env.PORT || 3000
 const URL = process.env.DB_URL
