@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const Order = require('../models/order')
 const router = Router()
-const routeProtector = require('../middleware/routes-protector')
+const routeProtector = require('../middleware/route-protector')
 
 router.get('/', routeProtector, async (req, res) => {
     try {

@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const Course = require('../models/course')
 const router = Router()
-const routeProtector = require('../middleware/routes-protector')
+const routeProtector = require('../middleware/route-protector')
 
 router.get('/', routeProtector, (req, res) => {
     res.render('add-course', {
