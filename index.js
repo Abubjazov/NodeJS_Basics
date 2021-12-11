@@ -3,6 +3,7 @@ const path = require('path')
 const express = require('express')
 const exhbs = require('express-handlebars')
 const mongo = require('mongoose')
+const session = require('express-session')
 
 const Handlebars = require('handlebars')
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access')
@@ -39,6 +40,11 @@ app.use(async (req, res, next) => {
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
+app.use(session({
+    secret: process.env.SECRET || 'some secret value',
+    resave: false,
+    saveUninitialized: false
+}))
 
 app.use('/', mainRoutes)
 app.use('/courses', coursesRoutes)
