@@ -53,17 +53,17 @@ async function start() {
     try {
         await mongo.connect(URL, { useNewUrlParser: true })
 
-        const candidate = await User.findOne()
+        // const candidate = await User.findOne()
 
-        if (!candidate) {
-            const user = new User({
-                email: 'test@mail.ru',
-                name: 'User1',
-                cart: { items: [] }
-            })
+        // if (!candidate) {
+        //     const user = new User({
+        //         email: 'test@mail.ru',
+        //         name: 'User1',
+        //         cart: { items: [] }
+        //     })
 
-            await user.save()
-        }
+        //     await user.save()
+        // }
 
         app.listen(PORT, () => {
             console.log(`Server is running on PORT: ${PORT}`)
