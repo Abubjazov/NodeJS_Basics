@@ -16,8 +16,18 @@ router.get('/logout', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
+    const user = await User.findById(process.env.USER_ID)
+
+    req.session.user = user
     req.session.isAuthenticated = true
-    res.redirect('/')
+
+    req.session.save(err => {
+        if (err) {
+            throw err
+        } else {
+            res.redirect('/')
+        }
+    })
 })
 
 module.exports = router

@@ -30,15 +30,6 @@ app.engine('hbs', hbs.engine)
 app.set('view engine', 'hbs')
 app.set('views', 'views')
 
-app.use(async (req, res, next) => {
-    try {
-        req.user = await User.findById(process.env.USER_ID)
-        next()
-    } catch (err) {
-        console.log(err)
-    }
-})
-
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
 app.use(session({
