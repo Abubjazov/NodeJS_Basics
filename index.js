@@ -1,5 +1,6 @@
 require('dotenv').config()
 const path = require('path')
+const csrf = require('csurf')
 const express = require('express')
 const exhbs = require('express-handlebars')
 const mongo = require('mongoose')
@@ -43,6 +44,7 @@ app.use(session({
     saveUninitialized: false,
     store
 }))
+app.use(csrf())
 app.use(varMiddleware)
 app.use(userMiddleware)
 
