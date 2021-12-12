@@ -35,10 +35,10 @@ router.post('/login', async (req, res) => {
                 })
 
             } else {
-                res.redirect('/auth/login#registration')
+                res.redirect('/auth/login#login')
             }
         } else {
-            res.redirect('/auth/login#registration')
+            res.redirect('/auth/login#login')
         }
 
     } catch (err) {
@@ -52,7 +52,7 @@ router.post('/registration', async (req, res) => {
         const candidate = await User.findOne({ email })
 
         if (candidate) {
-            res.redirect('/auth/login#login')
+            res.redirect('/auth/login#registration')
         } else {
             const hashPassword = await bcrypt.hash(password, 10)
             const user = new User({
@@ -60,7 +60,7 @@ router.post('/registration', async (req, res) => {
             })
 
             await user.save()
-            res.redirect('/auth/login#login')
+            res.redirect('/auth/login#registration')
         }
     } catch (err) {
         throw err
