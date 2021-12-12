@@ -26,8 +26,9 @@ router.get('/', routeProtector, async (req, res) => {
 router.post('/', routeProtector, async (req, res) => {
     try {
         const user = await req.user.populate('cart.items.courseId')
+        const filteredCourses = user.cart.items.filter(item => item.courseId !== null) //TODO: Problem with courses deleted from DB/courses
 
-        const courses = user.cart.items.map(item => ({
+        const courses = filteredCourses.map(item => ({
             count: item.count,
             course: { ...item.courseId._doc }
         }))
