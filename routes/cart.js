@@ -4,7 +4,9 @@ const router = Router()
 const routeProtector = require('../middleware/route-protector')
 
 function mapCartItems(cart) {
-    return cart.items.map(item => ({
+    const courses = cart.items.filter(item => item.courseId !== null) //TODO: Problem with courses deleted from DB/courses
+
+    return courses.map(item => ({
         ...item.courseId._doc,
         count: item.count,
         id: item.courseId.id
