@@ -17,18 +17,28 @@ router.get('/logout', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     try {
-        const user = await User.findById(process.env.USER_ID)
+        const { email, password } = req.body
+        const candidate = await User.findOne({ email })
 
-        req.session.user = user
-        req.session.isAuthenticated = true
+        if (candidate) {
+            const isPassword = password === candidate.password
 
-        req.session.save(err => {
-            if (err) {
-                throw err
+            if (isPassword) {
+                req.session.user = candidate
+                req.session.isAuthenticated = true
+                req.session.save(err => {
+                    if (err) throw err
+
+                    res.redirect('/')
+                })
+
             } else {
-                res.redirect('/')
+                res.redirect('/auth/login#registration')
             }
-        })
+        } else {
+            res.redirect('/auth/login#registration')
+        }
+
     } catch (err) {
         throw err
     }
