@@ -7,7 +7,10 @@ const router = Router()
 router.get('/login', async (req, res) => {
     res.render('auth/login', {
         title: 'Authorization',
-        isLogin: true
+        isLogin: true,
+        loginError: req.flash('loginError'),
+        registrationError: req.flash('registrationError'),
+        registrationSuccess: req.flash('registrationSuccess')
     })
 })
 
@@ -35,9 +38,11 @@ router.post('/login', async (req, res) => {
                 })
 
             } else {
+                req.flash('loginError', 'Invalid password')
                 res.redirect('/auth/login#login')
             }
         } else {
+            req.flash('loginError', `User < ${email} > not registered`)
             res.redirect('/auth/login#login')
         }
 
@@ -52,6 +57,7 @@ router.post('/registration', async (req, res) => {
         const candidate = await User.findOne({ email })
 
         if (candidate) {
+            req.flash('registrationError', `A user with email: < ${email} > is already registered`)
             res.redirect('/auth/login#registration')
         } else {
             const hashPassword = await bcrypt.hash(password, 10)
@@ -60,6 +66,7 @@ router.post('/registration', async (req, res) => {
             })
 
             await user.save()
+            req.flash('registrationSuccess', `User < ${email} > registered successfully`)
             res.redirect('/auth/login#registration')
         }
     } catch (err) {

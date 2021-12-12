@@ -30,6 +30,10 @@
             <input type="hidden" name="_csrf" value="{{@root.csrf}}">
 
             <button type="submit" class="btn btn-primary">Login</button>
+
+            {{#if loginError}}
+                <p class="alert">{{loginError}}</p>
+            {{/if}}
         </form>
     </div>
 
@@ -65,6 +69,14 @@
             <input type="hidden" name="_csrf" value="{{@root.csrf}}">
 
             <button type="submit" class="btn btn-primary">Register now</button>
+
+            {{#if registrationSuccess}}
+                <p class="success">{{registrationSuccess}}</p>
+            {{/if}}
+
+            {{#if registrationError}}
+                <p class="alert">{{registrationError}}</p>
+            {{/if}}
         </form>
     </div>
 
