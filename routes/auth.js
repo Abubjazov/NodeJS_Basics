@@ -88,4 +88,15 @@ router.post('/registration', async (req, res) => {
     }
 })
 
+router.get('/reset', (req, res) => {
+    res.render('auth/reset', {
+        title: 'Reset password',
+        error: req.flash('error')
+    })
+})
+
+router.post('/reset', async (req, res) => {
+
+})
+
 module.exports = router
