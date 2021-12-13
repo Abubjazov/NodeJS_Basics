@@ -40,7 +40,7 @@ app.set('views', 'views')
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }))
 app.use(session({
-    secret: process.env.SECRET || 'some secret value',
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
     store
@@ -57,7 +57,7 @@ app.use('/cart', cartRoutes)
 app.use('/orders', ordersRoutes)
 app.use('/auth', authRoutes)
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT
 const URL = process.env.DB_URL
 
 async function start() {
