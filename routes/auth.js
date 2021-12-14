@@ -74,7 +74,7 @@ router.post('/registration', async (req, res) => {
             await user.save()
 
             req.flash('registrationSuccess', `User < ${email} > registered successfully`)
-            res.redirect('/auth/login#registration')
+            res.redirect('/auth/login#login')
 
             sgMail
                 .send(regEmail(email))
@@ -136,6 +136,7 @@ router.post('/reset', (req, res) => {
 
 router.get('/password/:token', async (req, res) => {
     if (!req.params.token) {
+        // req.flash('error', 'Invalid token')
         return res.redirect('/auth/login')
     }
 
@@ -146,14 +147,41 @@ router.get('/password/:token', async (req, res) => {
         })
 
         if (!user) {
+            req.flash('error', 'Invalid login')
             return res.redirect('/auth/login')
         } else {
             res.render('auth/passwd', {
-                title: 'Rcovery access',
+                title: 'Recovery access',
                 userId: user._id.toString(),
                 token: req.params.token,
                 error: req.flash('error')
             })
+        }
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+router.post('/password', async (req, res) => {
+    try {
+        const user = await User.findOne({
+            _id: req.body.userId,
+            resetToken: req.body.token,
+            resetTokenExpiration: { $gt: Date.now() }
+        })
+
+        if (user) {
+            user.password = await bcrypt.hash(req.body.password, 10)
+            user.resetToken = undefined
+            user.resetTokenExpiration = undefined
+
+            await user.save()
+
+            res.redirect('/auth/login#login')
+            // req.flash('success', `User < ${user.email} > password changed successfully`)
+        } else {
+            res.redirect('/auth/login')
+            // req.flash('error', 'Sorry an error has occured. Please try again later.')
         }
     } catch (err) {
         console.log(err)
