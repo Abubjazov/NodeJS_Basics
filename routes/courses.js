@@ -49,19 +49,6 @@ router.post('/edit', routeProtector, async (req, res) => {
 
 })
 
-// const course = await Course.findById(req.body.id).lean()
-
-//         if (!isOwner(course, req)) {
-//             return res.redirect('/courses')
-//         }
-
-//         Object.assign(course, req.body)
-
-//         console.log(course)
-
-//         await course.save()
-//         res.redirect('/courses')
-
 router.post('/remove', routeProtector, async (req, res) => {
     try {
         await Course.findByIdAndRemove(req.body.id).lean()
