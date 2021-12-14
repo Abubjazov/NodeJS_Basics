@@ -9,7 +9,7 @@ function isOwner(course, req) {
 
 router.get('/', async (req, res) => {
     try {
-        const courses = await Course.find().populate('userId', 'email name').lean()
+        const courses = await Course.find().populate('userId', 'email name')
 
         res.render('courses', {
             title: 'Courses',
@@ -23,24 +23,28 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-    const course = await Course.findById(req.params.id).lean()
+    try {
+        const course = await Course.findById(req.params.id)
 
-    res.render('course', {
-        layout: 'course',
-        title: `${course.title}`,
-        course
-    })
+        res.render('course', {
+            layout: 'course',
+            title: `${course.title}`,
+            course
+        })
+    } catch (err) {
+        console.log(err)
+    }
 })
 
 router.post('/edit', routeProtector, async (req, res) => {
     try {
-        const course = await Course.findById(req.body.id).lean()
+        const course = await Course.findById(req.body.id)
 
         if (!isOwner(course, req)) {
             return res.redirect('/courses')
         }
 
-        await Course.findByIdAndUpdate(req.body.id, req.body).lean()
+        await Course.findByIdAndUpdate(req.body.id, req.body)
         res.redirect('/courses')
 
     } catch (err) {
@@ -51,12 +55,15 @@ router.post('/edit', routeProtector, async (req, res) => {
 
 router.post('/remove', routeProtector, async (req, res) => {
     try {
-        await Course.findByIdAndRemove(req.body.id).lean()
+        await Course.deleteOne({
+            _id: req.body.id,
+            userId: req.user._id
+        })
+
+        res.redirect('/courses')
     } catch (err) {
         console.log(err)
     }
-
-    res.redirect('/courses')
 })
 
 router.get('/:id/edit', routeProtector, async (req, res) => {
@@ -65,7 +72,7 @@ router.get('/:id/edit', routeProtector, async (req, res) => {
     }
 
     try {
-        const course = await Course.findById(req.params.id).lean()
+        const course = await Course.findById(req.params.id)
 
         if (!isOwner(course, req)) {
             return res.redirect('/courses')
