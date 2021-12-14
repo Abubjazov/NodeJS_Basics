@@ -1,9 +1,11 @@
 const { Router } = require('express')
 const bcrypt = require('bcryptjs')
 const sgMail = require('@sendgrid/mail')
+const crypto = require('crypto')
 
 const User = require('../models/user')
 const regEmail = require('../emails/registration')
+const resetPasswd = require('../emails/resetPasswd')
 const router = Router()
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -95,8 +97,41 @@ router.get('/reset', (req, res) => {
     })
 })
 
-router.post('/reset', async (req, res) => {
+router.post('/reset', (req, res) => {
+    try {
+        crypto.randomBytes(32, async (err, buffer) => {
+            if (err) {
+                req.flash('error', 'Something went wrong, please try again later.')
+                return res.redirect('/auth/reset')
+            }
 
+            const token = buffer.toString('hex')
+            const candidate = await User.findOne({ email: req.body.email })
+
+            if (candidate) {
+                candidate.resetToken = token
+                candidate.resetTokenExpiration = Date.now() + 3600000
+
+                await candidate.save()
+
+                sgMail
+                    .send(resetPasswd(candidate))
+                    .then(() => {
+                        console.log('Email sent')
+                    })
+                    .catch((error) => {
+                        console.error(error)
+                    })
+
+                res.redirect('/auth/login#login')
+            } else {
+                req.flash('error', `User < ${req.body.email} > is not registered`)
+                res.redirect('/auth/reset')
+            }
+        })
+    } catch (err) {
+        console.log(err)
+    }
 })
 
 module.exports = router
