@@ -1,7 +1,7 @@
 module.exports = function (user) {
     return {
         to: user.email,
-        subject: `Account < ${user.email} > access recovery. Token: ${user.resetToken}`,
+        subject: `Account < ${user.email} > access recovery.`,
         from: process.env.SENDER_EMAIL,
         html: `
             <h1>Access recovery</h1>

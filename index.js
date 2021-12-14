@@ -26,7 +26,8 @@ const authRoutes = require('./routes/auth')
 const hbs = exhbs.create({
     defaultLayout: 'main',
     extname: 'hbs',
-    handlebars: allowInsecurePrototypeAccess(Handlebars)
+    handlebars: allowInsecurePrototypeAccess(Handlebars),
+    helpers: require('./utils/hbs-helpers')
 })
 const store = new MongoStore({
     collection: 'sessions',

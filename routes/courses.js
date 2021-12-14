@@ -4,13 +4,18 @@ const router = Router()
 const routeProtector = require('../middleware/route-protector')
 
 router.get('/', async (req, res) => {
-    const courses = await Course.find().populate('userId', 'email name').lean()
+    try {
+        const courses = await Course.find().populate('userId', 'email name').lean()
 
-    res.render('courses', {
-        title: 'Courses',
-        isCourses: true,
-        courses
-    })
+        res.render('courses', {
+            title: 'Courses',
+            isCourses: true,
+            userId: req.user ? req.user._id : null,
+            courses
+        })
+    } catch (err) {
+        console.log(err)
+    }
 })
 
 router.get('/:id', async (req, res) => {
