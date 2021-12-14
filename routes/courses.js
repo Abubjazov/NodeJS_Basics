@@ -3,6 +3,10 @@ const Course = require('../models/course')
 const router = Router()
 const routeProtector = require('../middleware/route-protector')
 
+function isOwner(course, req) {
+    return course.userId.toString() === req.user._id.toString()
+}
+
 router.get('/', async (req, res) => {
     try {
         const courses = await Course.find().populate('userId', 'email name').lean()
@@ -29,9 +33,34 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/edit', routeProtector, async (req, res) => {
-    await Course.findByIdAndUpdate(req.body.id, req.body).lean()
-    res.redirect('/courses')
+    try {
+        const course = await Course.findById(req.body.id).lean()
+
+        if (!isOwner(course, req)) {
+            return res.redirect('/courses')
+        }
+
+        await Course.findByIdAndUpdate(req.body.id, req.body).lean()
+        res.redirect('/courses')
+
+    } catch (err) {
+        console.log(err)
+    }
+
 })
+
+// const course = await Course.findById(req.body.id).lean()
+
+//         if (!isOwner(course, req)) {
+//             return res.redirect('/courses')
+//         }
+
+//         Object.assign(course, req.body)
+
+//         console.log(course)
+
+//         await course.save()
+//         res.redirect('/courses')
 
 router.post('/remove', routeProtector, async (req, res) => {
     try {
@@ -48,12 +77,21 @@ router.get('/:id/edit', routeProtector, async (req, res) => {
         return res.redirect('/')
     }
 
-    const course = await Course.findById(req.params.id).lean()
+    try {
+        const course = await Course.findById(req.params.id).lean()
 
-    res.render('course-edit', {
-        title: `Edit ${course.title}`,
-        course
-    })
+        if (!isOwner(course, req)) {
+            return res.redirect('/courses')
+        }
+
+        res.render('course-edit', {
+            title: `Edit ${course.title}`,
+            course
+        })
+
+    } catch (err) {
+        console.log(err)
+    }
 })
 
 module.exports = router
