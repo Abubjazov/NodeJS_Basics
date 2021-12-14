@@ -134,4 +134,30 @@ router.post('/reset', (req, res) => {
     }
 })
 
+router.get('/password/:token', async (req, res) => {
+    if (!req.params.token) {
+        return res.redirect('/auth/login')
+    }
+
+    try {
+        const user = await User.findOne({
+            resetToken: req.params.token,
+            resetTokenExpiration: { $gt: Date.now() }
+        })
+
+        if (!user) {
+            return res.redirect('/auth/login')
+        } else {
+            res.render('auth/passwd', {
+                title: 'Rcovery access',
+                userId: user._id.toString(),
+                token: req.params.token,
+                error: req.flash('error')
+            })
+        }
+    } catch (err) {
+        console.log(err)
+    }
+})
+
 module.exports = router
