@@ -61,9 +61,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/registration', registrationValidators, async (req, res) => {
     try {
-        const { email, password, confirmPassword, name } = req.body
-        const candidate = await User.findOne({ email })
-
+        const { email, password, name } = req.body
         const validationErrors = validationResult(req)
 
         if (!validationErrors.isEmpty()) {
@@ -71,29 +69,24 @@ router.post('/registration', registrationValidators, async (req, res) => {
             return res.status(422).redirect('/auth/login#registration')
         }
 
-        if (candidate) {
-            req.flash('registrationError', `A user with email: < ${email} > is already registered`)
-            res.redirect('/auth/login#registration')
-        } else {
-            const hashPassword = await bcrypt.hash(password, 10)
-            const user = new User({
-                email, name, password: hashPassword, cart: { items: [] }
+        const hashPassword = await bcrypt.hash(password, 10)
+        const user = new User({
+            email, name, password: hashPassword, cart: { items: [] }
+        })
+
+        await user.save()
+
+        req.flash('registrationSuccess', `User < ${email} > registered successfully`)
+        res.redirect('/auth/login#login')
+
+        sgMail
+            .send(regEmail(email))
+            .then(() => {
+                console.log('Email sent')
             })
-
-            await user.save()
-
-            req.flash('registrationSuccess', `User < ${email} > registered successfully`)
-            res.redirect('/auth/login#login')
-
-            sgMail
-                .send(regEmail(email))
-                .then(() => {
-                    console.log('Email sent')
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
-        }
+            .catch((error) => {
+                console.error(error)
+            })
     } catch (err) {
         throw err
     }
