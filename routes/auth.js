@@ -2,11 +2,12 @@ const { Router } = require('express')
 const bcrypt = require('bcryptjs')
 const sgMail = require('@sendgrid/mail')
 const crypto = require('crypto')
-const { body, validationResult } = require('express-validator')
+const { validationResult } = require('express-validator')
 
 const User = require('../models/user')
 const regEmail = require('../emails/registration')
 const resetPasswd = require('../emails/resetPasswd')
+const { registrationValidators } = require('../utils/validators')
 const router = Router()
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -58,7 +59,7 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.post('/registration', body('email').isEmail(), async (req, res) => {
+router.post('/registration', registrationValidators, async (req, res) => {
     try {
         const { email, password, confirmPassword, name } = req.body
         const candidate = await User.findOne({ email })
