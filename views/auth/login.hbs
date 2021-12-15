@@ -43,7 +43,7 @@
     <div id="registration" class="col s9 offset-s3">
         <h1>Register in the store</h1>
 
-        <form action="/auth/registration" method="POST">
+        <form action="/auth/registration" method="POST" novalidate>
 
             <div class="input-field">
                 <input id="name" name="name" type="text" class="validate" required>
@@ -64,8 +64,8 @@
             </div>
 
             <div class="input-field">
-                <input id="confirm-password" name="confirm-password" type="password" class="validate" required>
-                <label for="confirm-password">Confirm password</label>
+                <input id="confirmPassword" name="confirmPassword" type="password" class="validate" required>
+                <label for="confirmPassword">Confirm password</label>
                 <span class="helper-text" data-error="Please confirm password"></span>
             </div>
 

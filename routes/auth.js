@@ -2,6 +2,7 @@ const { Router } = require('express')
 const bcrypt = require('bcryptjs')
 const sgMail = require('@sendgrid/mail')
 const crypto = require('crypto')
+const { body, validationResult } = require('express-validator')
 
 const User = require('../models/user')
 const regEmail = require('../emails/registration')
@@ -57,10 +58,17 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.post('/registration', async (req, res) => {
+router.post('/registration', body('email').isEmail(), async (req, res) => {
     try {
-        const { email, password, repeat, name } = req.body
+        const { email, password, confirmPassword, name } = req.body
         const candidate = await User.findOne({ email })
+
+        const validationErrors = validationResult(req)
+
+        if (!validationErrors.isEmpty()) {
+            req.flash('registrationError', validationErrors.array()[0].msg)
+            return res.status(422).redirect('/auth/login#registration')
+        }
 
         if (candidate) {
             req.flash('registrationError', `A user with email: < ${email} > is already registered`)
