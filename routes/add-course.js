@@ -19,7 +19,12 @@ router.post('/', routeProtector, courseValidators, async (req, res) => {
         return res.status(422).render('add-course', {
             title: 'Add course',
             isAddCourse: true,
-            error: errors.array()[0].msg
+            error: errors.array()[0].msg,
+            data: {
+                title: req.body.title,
+                price: req.body.price,
+                img: req.body.img
+            }
         })
     }
 
