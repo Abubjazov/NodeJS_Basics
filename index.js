@@ -16,6 +16,7 @@ const app = express()
 const varMiddleware = require('./middleware/variables')
 const userMiddleware = require('./middleware/user')
 const errorHandler = require('./middleware/error')
+const fileUpMiddleware = require('./middleware/fileUpload')
 
 const mainRoutes = require('./routes/main')
 const coursesRoutes = require('./routes/courses')
@@ -48,6 +49,7 @@ app.use(session({
     saveUninitialized: false,
     store
 }))
+app.use(fileUpMiddleware.single('avatar'))
 app.use(csrf())
 app.use(flash())
 app.use(varMiddleware)
