@@ -7,6 +7,7 @@ const exhbs = require('express-handlebars')
 const mongo = require('mongoose')
 const session = require('express-session')
 const MongoStore = require('connect-mongodb-session')(session)
+const helmet = require('helmet')
 
 const Handlebars = require('handlebars')
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access')
@@ -53,6 +54,10 @@ app.use(session({
 app.use(fileUpMiddleware.single('avatar'))
 app.use(csrf())
 app.use(flash())
+app.use(helmet({
+    referrerPolicy: { policy: "no-referrer" },
+    contentSecurityPolicy: false,
+}))
 app.use(varMiddleware)
 app.use(userMiddleware)
 
