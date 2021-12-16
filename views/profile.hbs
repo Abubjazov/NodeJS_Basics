@@ -1,2 +1,39 @@
 <h1>Profile</h1>
 <hr>
+<div class="row">
+    <div class="col s6">
+        <img 
+            class="avatar"
+            src="https://images.ctfassets.net/s5uo95nf6njh/646bVsndbSoJf5AomEG4pX/17a607f575c18ac484bc568606b6bea2/evan-you-thumbnail.jpg?w=300&fm=jpg" 
+            alt="Evan You">
+        <p>No avatar</p>
+    </div>
+
+    <div class="col s6">
+        <form action="/profile" method="POST">
+
+            <p>Your Email: <strong>{{user.email}}</strong></p>
+
+            <div class="input-field">
+                <input id="name" name="name" type="text" class="validate" value="{{user.name}}" required>
+                <label for="name">User name</label>
+                <span class="helper-text" data-error="Please input user name"></span>
+            </div>
+
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>Avatar</span>
+                    <input type="file" name="avatar">
+                </div>
+
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
+            </div>
+
+            <input type="hidden" name="_csrf" value="{{@root.csrf}}">
+
+            <button type="submit" class="btn">Change</button>
+        </form>
+    </div>
+</div>
