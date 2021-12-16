@@ -15,6 +15,7 @@ const app = express()
 
 const varMiddleware = require('./middleware/variables')
 const userMiddleware = require('./middleware/user')
+const errorHandler = require('./middleware/error')
 
 const mainRoutes = require('./routes/main')
 const coursesRoutes = require('./routes/courses')
@@ -57,6 +58,8 @@ app.use('/add-course', addCourseRoutes)
 app.use('/cart', cartRoutes)
 app.use('/orders', ordersRoutes)
 app.use('/auth', authRoutes)
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 const URL = process.env.DB_URL
