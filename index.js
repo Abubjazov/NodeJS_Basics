@@ -8,6 +8,7 @@ const mongo = require('mongoose')
 const session = require('express-session')
 const MongoStore = require('connect-mongodb-session')(session)
 const helmet = require('helmet')
+const compression = require('compression')
 
 const Handlebars = require('handlebars')
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access')
@@ -58,6 +59,7 @@ app.use(helmet({
     referrerPolicy: { policy: "no-referrer" },
     contentSecurityPolicy: false,
 }))
+app.use(compression())
 app.use(varMiddleware)
 app.use(userMiddleware)
 
